@@ -2,8 +2,8 @@ import xgboost
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
-from sklearn.grid_search import ParameterGrid
-from sklearn.cross_validation import StratifiedKFold
+from sklearn.model_selection import ParameterGrid
+from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
 import datetime
 import scipy.optimize as optimize
@@ -88,7 +88,11 @@ def date_parser(df):
 """
 Import data
 """
+# train = pd.DataFrame.from_csv('train.csv')
+SIZE = 4609
 train = pd.DataFrame.from_csv('train.csv')
+train = train.head(SIZE)
+
 train_index = train.index.values
 test = pd.DataFrame.from_csv('test.csv')
 test_index = test.index.values
@@ -98,6 +102,8 @@ test_index = test.index.values
 dataframe = pd.concat([train, test], axis=0)
 
 train_labels = pd.DataFrame.from_csv('labels.csv')
+train_labels = train_labels.head(SIZE)
+# train_labels = pd.DataFrame.from_csv('labels2.csv')
 
 submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
 
@@ -106,8 +112,18 @@ Preprocess
 """
 # Change labels to ints in order to use as y vector
 label_encoder = LabelEncoder()
+# print(train_labels.iloc[:, 0])
 train_labels.iloc[:, 0] = label_encoder.fit_transform(train_labels.values.flatten())
-
+# print(train_labels.iloc[:, 0])
+# for row in train_labels.iloc[:, 0]:
+#     if row ==3:
+#         print(row)
+#     # print(row)
+# #
+# exit(0)
+    # if row[1]==3:
+    #     print(row)
+# exit(0)
 # Parse date (removing is the easiest)
 dataframe = date_parser(dataframe)
 
@@ -179,7 +195,9 @@ for params in ParameterGrid(param_grid):
     # Use monte carlo simulation if needed to find small improvements
     for i_mc in range(params['n_monte_carlo']):
         cv_n = params['cv_n']
-        kf = StratifiedKFold(train_labels.values.flatten(), n_folds=cv_n, shuffle=True, random_state=i_mc ** 3)
+        kf = StratifiedKFold(n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
+        kf = kf.split(train, train_labels)
+
 
         xgboost_rounds = []
 
@@ -220,6 +238,7 @@ for params in ParameterGrid(param_grid):
             predicted_results = xgclassifier.predict(xg_test)
             train_predictions[cv_test_index] = predicted_results
 
+
         print('Calculating final splitter')
         splitter = opt_cut_global(train_predictions, train_labels.values.flatten())
         # train machine learning
@@ -228,7 +247,7 @@ for params in ParameterGrid(param_grid):
                                 # options={'disp': True}
                                 )
         classified_predicted_results = np.array(ranking(train_predictions, res.x)).astype('int')
-        print(classified_predicted_results.value_counts())
+        # print(classified_predicted_results.value_counts())
         print('Accuracy score ', accuracy_score(train_labels.values, classified_predicted_results))
         mc_auc.append(accuracy_score(train_labels.values, classified_predicted_results))
         mc_train_pred.append(classified_predicted_results)
@@ -259,20 +278,49 @@ for params in ParameterGrid(param_grid):
         mc_pred = []
         for i_mc in range(params['n_monte_carlo']):
             params['seed'] = i_mc
-            xg_train = xgboost.DMatrix(train, label=train_labels.values.flatten())
+            xg_train = xgboost.DMatrix(data=train, label=train_labels.values.flatten())
             xg_test = xgboost.DMatrix(test)
 
             watchlist = [(xg_train, 'train')]
 
             xgclassifier = xgboost.train(params, xg_train, num_round, watchlist);
             predicted_results = xgclassifier.predict(xg_test)
+            # print(predicted_results)
+            # exit(0)
+            # if predicted_results ==3:
+            #     print(predicted_results)
+            #     exit(0)
             mc_pred.append(predicted_results)
+            print(predicted_results)
 
-        meta_solvers_test.append((np.mean(np.array(mc_pred), axis=0) + 0.5).astype(int))
+
+        """"
+        +0.5 eklenmeli @@@@@@@@@@@@@@@@@@@@@@@@@
+        """
+
+
+        meta_solvers_test.append((np.mean(np.array(mc_pred), axis=0) +0.5 ).astype(int))
+
+        # TODO:
+        #2 den büyük gelen degerleri map etmemiz gerekiyor
+
+
+        # print(meta_solvers_test)
+        # exit(0)
+        # for row in meta_solvers_test[0]:
+        # for i in range(len(meta_solvers_test[0])):
+        #
+        #     if meta_solvers_test[0][i] > 2:
+        #         # row =2
+        #         print(i,">>",meta_solvers_test[0][i])
+        #         meta_solvers_test[0][i]=2
+            # print(">>>",row)
+            # exit(0)
         """ Write opt solution """
         print('writing to file')
         mc_train_pred = label_encoder.inverse_transform(mc_train_pred.astype(int))
         print(meta_solvers_test[-1])
+        # print(meta_solvers_test[-1])
         meta_solvers_test[-1] = label_encoder.inverse_transform(meta_solvers_test[-1])
         pd.DataFrame(mc_train_pred).to_csv('results/train_xgboost_d6_reg.csv')
         submission_file['status_group'] = meta_solvers_test[-1]
