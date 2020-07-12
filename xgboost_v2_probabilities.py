@@ -25,25 +25,56 @@ def date_parser(df):
 """
 Import data
 """
-train = pd.DataFrame.from_csv('train.csv')
+# train = pd.DataFrame.from_csv('train.csv')
+train = pd.read_csv('train.csv')
+# print(train)
+# exit(0)
 train_index = train.index.values
-test = pd.DataFrame.from_csv('test.csv')
+# test = pd.DataFrame.from_csv('test.csv')
+test = pd.read_csv('test.csv')
 test_index = test.index.values
 
 # combing tran and test data
 # helps working on all the data and removes factorization problems between train and test
 dataframe = pd.concat([train, test], axis=0)
 
-train_labels = pd.DataFrame.from_csv('labels.csv')
+# train_labels = pd.DataFrame.from_csv('labels.csv')
+train_labels = pd.read_csv('labels.csv')
 
-submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
+# submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
+submission_file = pd.read_csv("SubmissionFormat.csv")
 
 """
 Preprocess
 """
 # Change labels to ints in order to use as y vector
 label_encoder = LabelEncoder()
-train_labels.iloc[:, 0] = label_encoder.fit_transform(train_labels.values.flatten())
+# print((train_labels.values.flatten()))
+# print(train_labels.iloc[:, 1])
+print("*********************")
+labels_int = []
+
+for key, value in train_labels.values:
+    if(value == "non functional"):
+        labels_int.append(0)
+        # labels_int.append((key,0))
+    elif value == "functional":
+        labels_int.append(2)
+    else:
+        labels_int.append(1)
+        # labels_int.append((key,1))
+
+
+# print(labels_int)
+    # print(key,value)
+
+# train_labels.iloc[:, 0] = label_encoder.fit_transform(train_labels.values.flatten())
+# label_numbers = train_labels.iloc[:, 0]
+train_labels.iloc[:, 1] = labels_int
+# train_labels = train_labels.iloc[1: ]
+# print(train_labels)
+print(train_labels)
+exit(0)
 
 # Parse date (removing is the easiest)
 dataframe = date_parser(dataframe)
@@ -123,14 +154,14 @@ for params in ParameterGrid(param_grid):
     for i_mc in range(params['n_monte_carlo']):
         cv_n = params['cv_n']
         # print(train_labels.values.flatten('F'))
-
-        a = np.array(train_labels.values)
-        # print(a.tolist())
-        a_list = a.tolist()
-
-        value_list = []
-        for i in a_list:
-            value_list.append(i[0])
+        #
+        # a = np.array(train_labels.values)
+        # # print(a.tolist())
+        # a_list = a.tolist()
+        #
+        # value_list = []
+        # for i in a_list:
+        #     value_list.append(i[0])
 
         # a.flatten()
 
