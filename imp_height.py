@@ -1,8 +1,10 @@
 import xgboost
 import pandas as pd
 import numpy as np
-from sklearn.grid_search import ParameterGrid
-from sklearn.cross_validation import KFold
+# from sklearn.grid_search import ParameterGrid
+# from sklearn.cross_validation import KFold
+from sklearn.model_selection import ParameterGrid, KFold
+# from sklearn.model_selection import Kfold
 from sklearn.metrics import mean_squared_error
 import datetime
 
@@ -30,9 +32,9 @@ def col_to_freq(df, col_names):
 """
 Import data
 """
-train = pd.DataFrame.from_csv('train.csv')
+train = pd.read_csv('train.csv', index_col=0, parse_dates=True)
 train_index = train.index.values
-test = pd.DataFrame.from_csv('test.csv')
+test = pd.read_csv('test.csv', index_col=0, parse_dates=True)
 test_index = test.index.values
 print(train)
 
@@ -110,6 +112,7 @@ params_list = []
 print_results = []
 for params in ParameterGrid(param_grid):
     print(params)
+    exit(0)
     params_list.append(params)
     train_predictions = np.ones((imp_train.shape[0],))
     print('There are %d columns' % train.shape[1])
@@ -121,10 +124,15 @@ for params in ParameterGrid(param_grid):
     # Use monte carlo simulation if needed to find small improvements
     for i_mc in range(params['n_monte_carlo']):
         cv_n = params['cv_n']
-        kf = KFold(imp_train.shape[0], n_folds=cv_n, shuffle=True, random_state=i_mc ** 3)
-
+        # kf = KFold(imp_train.shape[0], n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
+        kf = KFold( n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
+        kf = kf.get_n_splits(imp_train.shape[0])
+        # kf =kf.split(imp_train.shape[0],)
+        print(kf)
+        exit(0)
         xgboost_rounds = []
         # Finding optimized number of rounds
+        # for cv_train_index, cv_test_index in kf:
         for cv_train_index, cv_test_index in kf:
             X_train, X_test = imp_train.values[cv_train_index, :], imp_train.values[cv_test_index, :]
             y_train = imp_y[cv_train_index]

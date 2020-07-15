@@ -88,24 +88,28 @@ def date_parser(df):
 """
 Import data
 """
-# train = pd.DataFrame.from_csv('train.csv')
+train = pd.read_csv('train.csv', index_col=0, parse_dates=True)
 SIZE = 4609
-train = pd.DataFrame.from_csv('train.csv')
-train = train.head(SIZE)
+# train = pd.read_csv('train.csv', index_col=0, parse_dates=True)
+# train = pd.read_csv('train.csv', index_col=0, parse_dates=True)
+# train = train.head(SIZE)
 
 train_index = train.index.values
-test = pd.DataFrame.from_csv('test.csv')
+# test = pd.DataFrame.from_csv('test.csv')
+test = pd.read_csv('test.csv', index_col=0, parse_dates=True)
 test_index = test.index.values
 
 # combing tran and test data
 # helps working on all the data and removes factorization problems between train and test
 dataframe = pd.concat([train, test], axis=0)
 
-train_labels = pd.DataFrame.from_csv('labels.csv')
-train_labels = train_labels.head(SIZE)
+train_labels = pd.read_csv('labels.csv', index_col=0, parse_dates=True)
+# train_labels = pd.DataFrame.from_csv('labels.csv')
+# train_labels = train_labels.head(SIZE)
 # train_labels = pd.DataFrame.from_csv('labels2.csv')
 
-submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
+# submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
+submission_file = pd.read_csv("SubmissionFormat.csv", index_col=0, parse_dates=True)
 
 """
 Preprocess

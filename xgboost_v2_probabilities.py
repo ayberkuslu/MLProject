@@ -3,8 +3,6 @@ import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import ParameterGrid
-# from sklearn.grid_search import ParameterGrid
-# from sklearn.cross_validation import StratifiedKFold
 from sklearn.model_selection import StratifiedKFold
 from sklearn.metrics import accuracy_score
 # import list
@@ -25,15 +23,15 @@ def date_parser(df):
 """
 Import data
 """
-train = pd.DataFrame.from_csv('train.csv')
-# train = pd.read_csv('train.csv')
+# train = pd.DataFrame.from_csv('train.csv')
+train = pd.read_csv('train.csv', index_col=0, parse_dates=True)
 
 # print(train)
 # exit(0)
 train_index = train.index.values
 
-test = pd.DataFrame.from_csv('test.csv')
-# test = pd.read_csv('test.csv')
+# test = pd.DataFrame.from_csv('test.csv')
+test = pd.read_csv('test.csv', index_col=0, parse_dates=True)
 
 test_index = test.index.values
 
@@ -42,12 +40,14 @@ test_index = test.index.values
 dataframe = pd.concat([train, test], axis=0)
 
 # train_labels = pd.DataFrame.from_csv('labels.csv')
-train_labels = pd.read_csv('labels.csv')
+train_labels = pd.read_csv('labels.csv', index_col=0, parse_dates=True)
 
 # submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
-submission_file = pd.read_csv("SubmissionFormat.csv")
+submission_file = pd.read_csv("SubmissionFormat.csv", index_col=0, parse_dates=True)
 
-train_labels = train_labels[:][:-1]
+# train_labels = train_labels[:][:-1]
+# print(train_labels)
+# exit(0)
 """
 Preprocess
 """
@@ -56,31 +56,9 @@ label_encoder = LabelEncoder()
 # print((train_labels.values.flatten()))
 # print(train_labels.iloc[:, 1])
 print("*********************")
-labels_int = []
 
-for key, value in train_labels.values:
-    if(value == "non functional"):
-        labels_int.append([key,0])
-        # labels_int.append((key,0))
-    elif value == "functional":
-        labels_int.append([key,2])
-    else:
-        labels_int.append([key,1])
-        # labels_int.append((key,1))
+train_labels.iloc[:, 0] = label_encoder.fit_transform(train_labels.values.flatten())
 
-
-print(labels_int)
-    # print(key,value)
-# print(train_labels)
-# exit(0)
-# train_labels.iloc[:, 0] = label_encoder.fit_transform(train_labels.values.flatten())
-
-# label_numbers = train_labels.iloc[:, 0]
-train_labels.iloc[:, 0] = labels_int
-# train_labels = train_labels.iloc[1: ]
-# print(train_labels)
-print(train_labels)
-exit(0)
 
 # Parse date (removing is the easiest)
 dataframe = date_parser(dataframe)
@@ -175,6 +153,9 @@ for params in ParameterGrid(param_grid):
 
         # print(train.iloc[:,-1])
         kf = kf.split(train, train_labels)
+        # print(len(train))
+        # print(len(train_labels))
+        # exit(0)
         # kf.get_n_splits(train[], target)
         # kf = StratifiedKFold(train_labels.values.flatten(), n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
 
