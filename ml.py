@@ -4,17 +4,19 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
 
-train = r"train.csv"
-test = r"test.csv"
+train = r"preprocessed_train.csv"
+test = r"preprocessed_test.csv"
 
 train = pd.read_csv(train)
 test = pd.read_csv(test)
-train_labels = pd.read_csv("labels.csv")
+
+# train_labels = pd.read_csv("labels.csv")
 # print(train_labels)
 
 # for row in train_labels:
   # print(train_labels[row])
-train = pd.concat([train, train_labels], axis=0)
+
+# train = pd.concat([train, train_labels], axis=0)
 
 
 # Get dummy columns for the categorical columns and shuffle the data.
