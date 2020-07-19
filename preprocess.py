@@ -3,7 +3,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-%matplotlib inline
 
 loc = r"C:\Users\me\Documents\datasets\pump.csv"
 loc2 = r"C:\Users\me\Documents\datasets\pump_labels.csv"

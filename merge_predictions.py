@@ -5,8 +5,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
 
 predictions_1_path = r"results/probabilies-predictions.csv"
-# predictions_2_path = r"results/pump2-predictions.csv"
-predictions_2_path = r"results/merged-predictions.csv"
+predictions_2_path = r"results/xgboost-predictions.csv"
 predictions_3_path = r"results/pump3-predictions.csv"
 # test = r"preprocessed_test.csv"
 
@@ -20,8 +19,7 @@ test3.columns = ['idd', 'status_group']
 
 
 weight1 = 0.8079
-weight2 = 0.8064
-# weight2 = 0.7318
+weight2 = 0.8139
 weight3 = 0.8079
 ids = test1.idd
 
@@ -55,12 +53,12 @@ for index in range(len(test1)):
 vals_to_replace2 = {2: 'functional', 1: 'functional needs repair',
                    0: 'non functional'}
 
-data = {'ID': ids, 'status_group': merged_group}
+data = {'id': ids, 'status_group': merged_group}
 
 submit = pd.DataFrame(data=data)
 
 submit.status_group = submit.status_group.replace(vals_to_replace2)
-# submit.to_csv('results/merged-predictions.csv', index=False)
+submit.to_csv('results/merged-predictions.csv', index=False)
 
 # test = pd.read_csv(test)
 # print()
