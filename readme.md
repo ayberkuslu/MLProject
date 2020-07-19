@@ -16,3 +16,9 @@
 4. Train the model on all the train data
 5. Predict test results
 6. Write results file
+
+
+
+
+water-pump-3 ---> pump-predictions  0.8079 
+xgboost_v2_probabilities ---> test_xgboost_d6  0.8079 

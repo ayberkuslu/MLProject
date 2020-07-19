@@ -126,10 +126,10 @@ for params in ParameterGrid(param_grid):
         cv_n = params['cv_n']
         # kf = KFold(imp_train.shape[0], n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
         kf = KFold( n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
-        kf = kf.get_n_splits(imp_train.shape[0])
+        # kf = kf.get_n_splits(imp_train.shape[0])
         # kf =kf.split(imp_train.shape[0],)
-        print(kf)
-        exit(0)
+        # print(kf)
+        # exit(0)
         xgboost_rounds = []
         # Finding optimized number of rounds
         # for cv_train_index, cv_test_index in kf:

@@ -45,7 +45,7 @@ def model(X_train, X_val, y_train, y_val, test):
 
         estimator = GridSearchCV(estimator=GradientBoostingClassifier(),
                                  param_grid=param_grid,
-                                 n_jobs=-1, verbose=True)
+                                 n_jobs=-1, verbose=15)
 
         estimator.fit(X_train, y_train)
 
