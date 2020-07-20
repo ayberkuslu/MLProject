@@ -137,27 +137,12 @@ for params in ParameterGrid(param_grid):
     # Use monte carlo simulation if needed to find small improvements
     for i_mc in range(params['n_monte_carlo']):
         cv_n = params['cv_n']
-        # print(train_labels.values.flatten('F'))
-        #
-        # a = np.array(train_labels.values)
-        # # print(a.tolist())
-        # a_list = a.tolist()
-        #
-        # value_list = []
-        # for i in a_list:
-        #     value_list.append(i[0])
 
-        # a.flatten()
 
         kf = StratifiedKFold(n_splits=cv_n,shuffle=True, random_state=i_mc ** 3)
 
-        # print(train.iloc[:,-1])
         kf = kf.split(train, train_labels)
-        # print(len(train))
-        # print(len(train_labels))
-        # exit(0)
-        # kf.get_n_splits(train[], target)
-        # kf = StratifiedKFold(train_labels.values.flatten(), n_splits=cv_n, shuffle=True, random_state=i_mc ** 3)
+
 
         xgboost_rounds = []
 

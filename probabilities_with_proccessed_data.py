@@ -50,17 +50,12 @@ dataframe = pd.concat([train, test], axis=0)
 # submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
 submission_file = pd.read_csv("SubmissionFormat.csv", index_col=0, parse_dates=True)
 
-# train_labels = train_labels[:][:-1]
-# print(train_labels)
-# exit(0)
+
 """
 Preprocess
 """
 # Change labels to ints in order to use as y vector
 label_encoder = LabelEncoder()
-# print((train_labels.values.flatten()))
-# print(train_labels.iloc[:, 1])
-print("*********************")
 
 # train_labels.iloc[:, 0] = label_encoder.fit_transform(train_labels.values.flatten())
 
