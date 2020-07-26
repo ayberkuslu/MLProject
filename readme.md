@@ -1,23 +1,15 @@
-### Main features
-
-1. Reading the data
-2. Preprocessing:
-    1. 2 stages of imputations. GPS_Height and then amount_tsh
-    2. Recorded date parsing to year, weekday, week of the year, month, and age of well
-    3. Labeling changed from strings to numbers (and back)
-    4. Using frequency of the str variables with a lot of sparse factors
-    5. Factorized str typed variables
-3. Stratified cross validation
-    1. Optimize hyper-parameters using custom accuracy function (xgboost doesn't have one)
-    2. Finding best number of rounds
-    3. Create Full prediction trainset
-    4. Using n Monte Carlo experiments to find the standard deviation in the metric function
-     and if neccesary measuring a small improvement.
-4. Train the model on all the train data
-5. Predict test results
-6. Write results file
 
 
+--FEATURE ENGINEERING--
+--Record tarihleri, date den geçtiği zamana göre inte çevrildi
+-- String olan columnlar factorize edildi (int e dönüştü)
+-- target column int'e donüştürüldü
+-- birbirine çok yakın columnlar silindi
+***********
+-- Train seti 80'e 20 olarak ayrıldı.
+-- Bu setler üzerinden denemeler gerçekleşti, optimal paramtreler bulundu
+-- Daha sonra bu paramtrelerle tüm train seti eğitildi ve submission data predict edildi
+-- predictionlar geri stringe çevrildi.
 
 
 water-pump-3 ---> pump-predictions  0.8079 
