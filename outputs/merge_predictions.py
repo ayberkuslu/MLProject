@@ -1,13 +1,9 @@
 import pandas as pd
-import numpy as np
-from sklearn.model_selection import train_test_split
-from sklearn.model_selection import GridSearchCV
-from sklearn.ensemble import GradientBoostingClassifier
+
 
 predictions_1_path = r"results/probabilies-predictions.csv"
 predictions_2_path = r"results/xgboost-predictions.csv"
 predictions_3_path = r"results/pump3-predictions.csv"
-# test = r"preprocessed_test.csv"
 
 test1 = pd.read_csv(predictions_1_path)
 test2 = pd.read_csv(predictions_2_path)
@@ -27,11 +23,11 @@ vals_to_replace = {'functional' : 2, 'functional needs repair':1,
                    'non functional' : 0}
 
 test1.status_group = test1.status_group.replace(vals_to_replace)
-# test2.status_group = test2.status_group.replace(vals_to_replace)
+test2.status_group = test2.status_group.replace(vals_to_replace)
 test3.status_group = test3.status_group.replace(vals_to_replace)
 
 test1 = test1.status_group
-# test2 = test2.status_group
+test2 = test2.status_group
 test3 = test3.status_group
 
 

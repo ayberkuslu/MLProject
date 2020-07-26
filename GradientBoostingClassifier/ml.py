@@ -1,5 +1,4 @@
 import pandas as pd
-import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
@@ -9,7 +8,6 @@ test = r"preprocessed_test.csv"
 
 train = pd.read_csv(train)
 test = pd.read_csv(test)
-print()
 
 # Get dummy columns for the categorical columns and shuffle the data.
 
@@ -24,11 +22,12 @@ train = train.sample(frac=1).reset_index(drop=True)
 
 test = pd.get_dummies(test, columns=dummy_cols)
 
-# Let's split the train set into train and validation sets. Also remove the target.
-
 target = train.status_group
 features = train.drop('status_group', axis=1)
 
+# %80 e %20 lik train ve test setleri
+
+print(target)
 X_train, X_val, y_train, y_val = train_test_split(features, target, train_size=0.8)
 
 
@@ -45,7 +44,8 @@ def model(X_train, X_val, y_train, y_val, test):
 
         estimator = GridSearchCV(estimator=GradientBoostingClassifier(),
                                  param_grid=param_grid,
-                                 n_jobs=-1, verbose=15)
+                                 n_jobs=-1,
+                                 verbose=15)
 
         estimator.fit(X_train, y_train)
 
@@ -57,15 +57,14 @@ def model(X_train, X_val, y_train, y_val, test):
         print('Validation accuracy: ', validation_accuracy)
 
 
-print("started")
-model(X_train, X_val, y_train, y_val, test)
-# {'min_samples_leaf': 16, 'n_estimators': 100, 'learning_rate': 0.075, 'max_features': 1.0, 'max_depth': 14}
-# Validation accuracy:  0.796043771044
+## model for training
+
+# model(X_train, X_val, y_train, y_val, test)
 
 
-# Get data necessary for submission.
+# Submit icin dosya oku.
 
-submit_loc = r"results/pump_submit.csv"
+submit_loc = r"SubmissionFormat.csv"
 test_id = pd.read_csv(submit_loc)
 test_id.columns = ['idd', 'status_group']
 test_id = test_id.idd
@@ -81,7 +80,8 @@ def model_for_submission(features, target, test):
 
         estimator = GridSearchCV(estimator=GradientBoostingClassifier(),
                                  param_grid=best_params,
-                                 n_jobs=-1)
+                                 n_jobs=-1,
+                                 verbose=15)
 
         estimator.fit(features, target)
 
@@ -96,23 +96,7 @@ def model_for_submission(features, target, test):
 
         submit.status_group = submit.status_group.replace(vals_to_replace)
 
-        submit.to_csv('pump_predictions.csv', index=False)
+        submit.to_csv('ml-result.csv', index=False)
 
-
-# Run model for submission.
 
 model_for_submission(features, target, test)
-
-# The model scored 0.8073. Which leaves me ranking 203/2147 (as of 04/10/2016) which is just
-# inside the top ten percent.
-# Below are scores from other models I ran using less variables.
-# The modifications helped to improve the model.
-
-# Score: 0.7809 without funder.
-# Score: 0.7826 with funder.
-# Score: 0.7859 with funder and installer.
-# Score: 0.7875 with funder, installer and scheme management.
-# Score: 0.7923 with funder, installer, scheme management and extractor type.
-# Score: 0.7949 with funder, installer, scheme management, extractor type and basin
-# Score: 0.7970 with funder, installer, scheme management, extractor type, basin and a
-#              unmodified version of water quality.
