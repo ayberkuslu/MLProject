@@ -10,7 +10,3 @@
 -- Bu setler üzerinden denemeler gerçekleşti, optimal paramtreler bulundu
 -- Daha sonra bu paramtrelerle tüm train seti eğitildi ve submission data predict edildi
 -- predictionlar geri stringe çevrildi.
-
-
-water-pump-3 ---> pump-predictions  0.8079 
-xgboost_v2_probabilities ---> test_xgboost_d6  0.8079 
