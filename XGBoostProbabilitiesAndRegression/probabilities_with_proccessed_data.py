@@ -48,7 +48,7 @@ dataframe = pd.concat([train, test], axis=0)
 # train_labels = pd.DataFrame.from_csv('labels.csv')
 
 # submission_file = pd.DataFrame.from_csv("SubmissionFormat.csv")
-submission_file = pd.read_csv("SubmissionFormat.csv", index_col=0, parse_dates=True)
+submission_file = pd.read_csv("../inputs/SubmissionFormat.csv", index_col=0, parse_dates=True)
 
 
 """
@@ -242,7 +242,7 @@ for params in ParameterGrid(param_grid):
         mc_train_pred = label_encoder.inverse_transform(mc_train_pred.astype(int))
         print(meta_solvers_test[-1])
         meta_solvers_test[-1] = label_encoder.inverse_transform(meta_solvers_test[-1])
-        pd.DataFrame(mc_train_pred).to_csv('results/train_xgboost_d6.csv')
+        pd.DataFrame(mc_train_pred).to_csv('../results/train_xgboost_d6.csv')
         submission_file['status_group'] = meta_solvers_test[-1]
         submission_file.to_csv("results/test_xgboost_d6.csv")
 
