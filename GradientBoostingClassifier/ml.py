@@ -6,7 +6,6 @@ from sklearn.ensemble import GradientBoostingClassifier
 # Get dummy columns for the categorical columns and shuffle the data.
 
 
-# train datasında guncelleme yapildi ancak gereksiz featurelar kodun icinde secilmedi.
 #
 #
 
