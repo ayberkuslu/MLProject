@@ -3,6 +3,8 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
 
+# colab surumuyle uyumlu degil, pc de calistir.
+
 train = r"preprocessed_train.csv"
 test = r"preprocessed_test.csv"
 
@@ -10,7 +12,6 @@ train = pd.read_csv(train)
 test = pd.read_csv(test)
 print()
 
-# Get dummy columns for the categorical columns and shuffle the data.
 
 dummy_cols = ['funder', 'installer', 'basin', 'public_meeting', 'scheme_management', 'permit',
               'construction_year', 'extraction_type_class', 'payment_type', 'water_quality',

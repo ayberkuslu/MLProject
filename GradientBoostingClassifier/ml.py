@@ -3,6 +3,14 @@ from sklearn.model_selection import train_test_split
 from sklearn.model_selection import GridSearchCV
 from sklearn.ensemble import GradientBoostingClassifier
 
+# Get dummy columns for the categorical columns and shuffle the data.
+
+
+# train datasında guncelleme yapildi ancak gereksiz featurelar kodun icinde secilmedi.
+#
+#
+
+
 train = r"preprocessed_train.csv"
 test = r"preprocessed_test.csv"
 
@@ -30,9 +38,6 @@ features = train.drop('status_group', axis=1)
 print(target)
 X_train, X_val, y_train, y_val = train_test_split(features, target, train_size=0.8)
 
-
-# Both the train and test set are ready for modelling. I'll use a gradient boosting algorithm.
-# http://scikit-learn.org/stable/modules/generated/sklearn.ensemble.GradientBoostingClassifier.html
 
 def model(X_train, X_val, y_train, y_val, test):
     if __name__ == '__main__':
